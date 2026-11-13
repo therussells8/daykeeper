@@ -1,0 +1,8 @@
+{
+  "name": "daykeeper",
+  "compatibilityDate": "2026-05-15",
+  "database": {
+    "name": "daykeeper-db",
+    "id": "111c33b3-b1c9-4ea7-ba17-1bd75b5c2449"
+  }
+}

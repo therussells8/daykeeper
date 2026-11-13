@@ -1,0 +1,3 @@
+# Copy to .dev.vars to enable the local-only development identity.
+# Ignored in production, even when set there.
+DAYKEEPER_DEV_AUTH=1

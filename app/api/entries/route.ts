@@ -1,17 +1,17 @@
 import { and, eq } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { entries } from '@/db/schema';
-import { getChatGPTUser } from '@/app/chatgpt-auth';
+import { getCurrentUser } from '@/app/auth';
 import { entrySchema } from '@/app/model';
 export const dynamic = 'force-dynamic';
 const json = (body: unknown, status = 200) => Response.json(body, { status, headers: { 'Cache-Control':'no-store' } });
 export async function GET() {
-  const user = await getChatGPTUser(); if (!user) return json({error:'Please sign in to load your organizer.'},401);
+  const user = await getCurrentUser(); if (!user) return json({error:'Please sign in to load your organizer.'},401);
   try { const rows = await getDb().select().from(entries).where(eq(entries.owner,user.userId)); return json(rows.map(r=>JSON.parse(r.data))); }
   catch (error) { console.error('entries_read_failed',error); return json({error:'Could not load your organizer. Please try again.'},503); }
 }
 async function mutate(request: Request, method: string) {
-  const user = await getChatGPTUser(); if (!user) return json({error:'Please sign in to save changes.'},401);
+  const user = await getCurrentUser(); if (!user) return json({error:'Please sign in to save changes.'},401);
   if (request.headers.get('origin') !== new URL(request.url).origin) return json({error:'Invalid request origin.'},403);
   if (Number(request.headers.get('content-length') || 0) > 16000) return json({error:'Request too large.'},413);
   try {
